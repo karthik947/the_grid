@@ -1,0 +1,40 @@
+[package]
+name = "the_grid"
+version = "0.1.0"
+edition = "2024"
+repository = "https://github.com/karthik947/the_grid"
+authors = ["karthik"]
+
+[profile.dev]
+opt-level = 1          # keep dev builds quick but a bit optimized
+debug = true
+lto = false
+incremental = true
+
+[profile.release]
+opt-level = "z"        # size-focused; use "s" if you prefer faster
+lto = "thin"           # link-time opt with good speed/size balance
+codegen-units = 1      # better optimization at the cost of longer compile
+panic = "abort"        # smaller binary; skips unwinding
+strip = "symbols"      # remove symbols in release builds (nightly stable on 1.78+)
+incremental = false    # This avoids accumulating cache data for release builds.
+
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"
+
+[dependencies]
+env_logger = "0.11.8"
+log = "0.4.28"
+reqwest = "0.12.24"
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.145"
+thiserror = "2.0.17"
+tokio = { version = "1.48.0", features = ["full"] }
+tokio-tungstenite = { version = "0.28.0", default-features = false, features = ["connect", "native-tls"] }
+futures-util = "0.3.31"
+confy = "2.0.0"
+egui = "0.33.3"
+egui_extras = "0.33.3"
+eframe = "0.33.3"
