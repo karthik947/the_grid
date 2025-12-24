@@ -62,7 +62,7 @@ Built as a native desktop app with `eframe`/`egui`—no web or mobile frontend.
 - Pairs: comma-separated input (default `BTCUSDT,ETHUSDT`). Empty pairs are rejected by the websocket builder.
 - Indicators: toggle Volatility/RSI independently; set RSI length (default 14) and source (Open/High/Low/Close). Per-timeframe toggles for both indicators.
 - Thresholds: per-timeframe volatility thresholds; RSI overbought/oversold defaults (70/30) shown in the UI.
-- Presets: select/create/save in the settings modal. Active preset drives the running config; presets persist via `confy` under the app name `testmods` with key `dashboard_presets`.
+- Presets: select/create/save in the settings modal. Active preset drives the running config; presets persist via `confy` under the app name `the_grid` with key `dashboard_presets`.
 - Size presets: XL/LG/MD/SM/XS adjust cell density for different screens.
 
 ## UI tour 👀

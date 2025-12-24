@@ -118,7 +118,7 @@ impl Default for PresetStore {
 
 impl PresetStore {
     pub fn load() -> Self {
-        match confy::load::<PresetStore>("testmods", PRESET_CONFIG_NAME) {
+        match confy::load::<PresetStore>("the_grid", PRESET_CONFIG_NAME) {
             Ok(store) => store.normalize(),
             Err(err) => {
                 error!("failed to load presets: {err}");
@@ -128,7 +128,7 @@ impl PresetStore {
     }
 
     pub fn save(&self) {
-        if let Err(err) = confy::store("testmods", PRESET_CONFIG_NAME, self) {
+        if let Err(err) = confy::store("the_grid", PRESET_CONFIG_NAME, self) {
             error!("failed to save presets: {err}");
         }
     }
