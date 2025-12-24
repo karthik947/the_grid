@@ -1,6 +1,6 @@
 [package]
 name = "the_grid"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 repository = "https://github.com/karthik947/the_grid"
 authors = ["karthik"]
