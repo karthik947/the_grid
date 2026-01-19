@@ -112,6 +112,8 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       BUILD_MANIFEST_NAME: target/distrib/${{ join(matrix.targets, '-') }}-dist-manifest.json
+      APP_ENV: prod
+      RUST_LOG: warn
     steps:
       - name: enable windows longpaths
         run: |
@@ -174,6 +176,8 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       BUILD_MANIFEST_NAME: target/distrib/global-dist-manifest.json
+      APP_ENV: prod
+      RUST_LOG: warn
     steps:
       - uses: actions/checkout@v4
         with:
