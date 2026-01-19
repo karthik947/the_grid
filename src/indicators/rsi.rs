@@ -21,6 +21,8 @@ pub struct Rsi {
     aggr_closed_bars: Option<BarAggregation>, // aggregation of closed 1m bars of the current bar
     previous_bar: Option<PreviousBar>,
     value: Option<f32>,
+    to_send: bool,
+    sent_once: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -58,6 +60,8 @@ impl Rsi {
             aggr_closed_bars: None,
             previous_bar: None,
             value: None,
+            to_send: false,
+            sent_once: false,
         }
     }
     fn update_window(&mut self, bar: Bar1m) {
@@ -142,14 +146,20 @@ impl Rsi {
         let avg_gain = (prev.avg_gain * (period - 1.0) + gain) / period;
         let avg_loss = (prev.avg_loss * (period - 1.0) + loss) / period;
 
-        let value = if avg_loss == 0.0 {
-            100.0
+        let new_value = if avg_loss == 0.0 {
+            Some(100 as f32)
         } else {
             let rs = avg_gain / avg_loss;
-            100.0 - (100.0 / (1.0 + rs))
+            let v = 100.0 - (100.0 / (1.0 + rs));
+            Some(v.trunc() as f32)
         };
 
-        self.value = Some(value as f32);
+        let changed = new_value != self.value;
+
+        if changed {
+            self.value = new_value;
+        }
+        self.to_send = changed;
     }
     fn set_previous_bar_from_history(&mut self, input: &KlineHist) {
         let now_ms = now_millis();
@@ -326,7 +336,13 @@ impl Indicator for Rsi {
             Stage::Ready => {
                 self.update_window(input.bar_1m);
                 self.set_value();
-                return self.value;
+                if !self.sent_once {
+                    self.sent_once = true;
+                    return self.value;
+                }
+                if self.to_send {
+                    return self.value;
+                }
             }
         }
 

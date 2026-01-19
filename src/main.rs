@@ -9,26 +9,27 @@ mod klinestore;
 mod logger;
 mod message_bus;
 mod time;
+mod tui;
 mod types;
-mod ui;
 mod ws;
 
 pub use error::Result;
 
 use adapters::binance::BinanceRest;
-use eframe::{NativeOptions, egui};
 use engine::Engine;
 use error::GlobalError;
 use history::HistoryService;
 use klinestore::KlineStore;
+use log::info;
 use logger::initialize_logger;
 use message_bus::{EngineBus, HistoryBus, UiBus, WsBus};
 use tokio::runtime::Builder;
-use ui::DashboardApp;
+use tui::run_tui;
 use ws::WsClient;
 
 fn main() -> Result<()> {
     initialize_logger()?;
+    info!("grid: started");
 
     let runtime = Builder::new_multi_thread()
         .enable_all()
@@ -86,28 +87,7 @@ fn main() -> Result<()> {
         })
     };
 
-    let options = NativeOptions {
-        viewport: egui::ViewportBuilder::default()
-            .with_title("The Grid")
-            .with_inner_size([1400.0, 900.0])
-            .with_min_inner_size([960.0, 640.0]),
-        ..Default::default()
-    };
-
-    eframe::run_native(
-        "The Grid",
-        options,
-        Box::new(|_cc| {
-            Ok(Box::new(DashboardApp::new(
-                engine_tx_ui,
-                history_tx_ui,
-                ws_tx_ui,
-                ui_handle,
-                ui_rx,
-            )))
-        }),
-    )
-    .map_err(|e| GlobalError::Other(e.to_string()))?;
+    run_tui(engine_tx_ui, history_tx_ui, ws_tx_ui, ui_handle, ui_rx)?;
 
     let _ = watcher.join();
     Ok(())

@@ -19,6 +19,8 @@ pub struct Volatility {
     window_1m_bars: Option<RingBuffer<Bar1m>>,
     aggr_closed_bars: Option<BarAggregation>,
     value: Option<f32>,
+    sent_once: bool,
+    to_send: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -47,6 +49,8 @@ impl Volatility {
             window_1m_bars: None,
             aggr_closed_bars: None,
             value: None,
+            to_send: false,
+            sent_once: false,
         }
     }
     fn update_window(&mut self, bar: Bar1m) -> Option<f32> {
@@ -78,24 +82,30 @@ impl Volatility {
             return;
         };
 
-        if let Some(aggr) = self.aggr_closed_bars.as_ref() {
+        let new_value = if let Some(aggr) = self.aggr_closed_bars.as_ref() {
             let high = aggr.high.max(last.high);
             let low = aggr.low.min(last.low);
-            let open = aggr.open;
             let sign = if aggr.high_ts > aggr.low_ts {
                 1.0
             } else {
                 -1.0
             };
             let extent = ((high - low) / low) * 100.0 * sign; // +/- fraction
-            let value = (extent * 10000.0).trunc() / 10000.0; // 4-decimals
-            self.value = Some(value as f32);
+            let value = (extent * 10.0).trunc() / 10.0; // 4-decimals
+            Some(value as f32)
         } else {
             let sign = if last.open < last.close { 1.0 } else { -1.0 };
             let extent = ((last.high - last.low) / last.low) * 100.0 * sign; // +/- fraction
-            let value = (extent * 10000.0).trunc() / 10000.0; // 4-decimals
-            self.value = Some(value as f32);
+            let value = (extent * 10.0).trunc() / 10.0; // 4-decimals
+            Some(value as f32)
+        };
+
+        let changed = new_value != self.value;
+
+        if changed {
+            self.value = new_value;
         }
+        self.to_send = changed;
     }
     fn set_aggregate(&mut self) {
         self.aggr_closed_bars = if self.tf == Timeframe::M1 {
@@ -223,7 +233,13 @@ impl Indicator for Volatility {
             Stage::Ready => {
                 self.update_window(input.bar_1m);
                 self.set_value();
-                return self.value;
+                if !self.sent_once {
+                    self.sent_once = true;
+                    return self.value;
+                }
+                if self.to_send {
+                    return self.value;
+                }
             }
         }
 

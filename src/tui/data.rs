@@ -18,35 +18,7 @@ impl IndicatorKind {
     }
 }
 
-/// Size presets that drive spacing and typography.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum SizePreset {
-    Xs,
-    Sm,
-    Md,
-    Lg,
-    Xl,
-}
-
-impl SizePreset {
-    pub const fn label(&self) -> &'static str {
-        match self {
-            SizePreset::Xs => "XS",
-            SizePreset::Sm => "SM",
-            SizePreset::Md => "MD",
-            SizePreset::Lg => "LG",
-            SizePreset::Xl => "XL",
-        }
-    }
-}
-
-impl Default for SizePreset {
-    fn default() -> Self {
-        SizePreset::Xs
-    }
-}
-
-/// UI metrics derived from the active size preset.
+/// UI metrics for the dashboard layout.
 #[derive(Clone, Copy, Debug)]
 pub struct UiMetrics {
     pub font_size: f32,
@@ -59,59 +31,17 @@ pub struct UiMetrics {
     pub header_height: f32,
 }
 
-impl From<SizePreset> for UiMetrics {
-    fn from(value: SizePreset) -> Self {
-        match value {
-            SizePreset::Xs => Self {
-                font_size: 12.0,
-                header_timeframe_font_size: 14.0,
-                header_indicator_font_size: 8.0,
-                row_height: 22.0,
-                cell_padding: 6.0,
-                group_gap: 12.0,
-                column_gap: 16.0,
-                header_height: 36.0,
-            },
-            SizePreset::Sm => Self {
-                font_size: 13.0,
-                header_timeframe_font_size: 15.0,
-                header_indicator_font_size: 10.5,
-                row_height: 24.0,
-                cell_padding: 7.0,
-                group_gap: 14.0,
-                column_gap: 18.0,
-                header_height: 38.0,
-            },
-            SizePreset::Md => Self {
-                font_size: 14.0,
-                header_timeframe_font_size: 16.0,
-                header_indicator_font_size: 11.0,
-                row_height: 26.0,
-                cell_padding: 8.0,
-                group_gap: 16.0,
-                column_gap: 20.0,
-                header_height: 40.0,
-            },
-            SizePreset::Lg => Self {
-                font_size: 15.0,
-                header_timeframe_font_size: 17.0,
-                header_indicator_font_size: 11.5,
-                row_height: 28.0,
-                cell_padding: 9.0,
-                group_gap: 18.0,
-                column_gap: 22.0,
-                header_height: 42.0,
-            },
-            SizePreset::Xl => Self {
-                font_size: 16.0,
-                header_timeframe_font_size: 18.0,
-                header_indicator_font_size: 12.0,
-                row_height: 30.0,
-                cell_padding: 10.0,
-                group_gap: 20.0,
-                column_gap: 24.0,
-                header_height: 44.0,
-            },
+impl Default for UiMetrics {
+    fn default() -> Self {
+        Self {
+            font_size: 12.0,
+            header_timeframe_font_size: 14.0,
+            header_indicator_font_size: 8.0,
+            row_height: 22.0,
+            cell_padding: 6.0,
+            group_gap: 12.0,
+            column_gap: 16.0,
+            header_height: 36.0,
         }
     }
 }

@@ -2,8 +2,8 @@ use std::collections::HashMap;
 
 use crate::{
     error::{ConfigError, Result},
+    tui::settings::SettingsForm,
     types::{KlineSource, Timeframe},
-    ui::settings::SettingsForm,
 };
 
 pub const DEFAULT_RSI_LENGTH: usize = 14;

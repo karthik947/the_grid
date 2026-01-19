@@ -5,8 +5,8 @@ use log::error;
 use serde::{Deserialize, Serialize};
 
 use crate::{
+    tui::data::{IndicatorConfig, IndicatorKind},
     types::{KlineSource, Timeframe, config::DEFAULT_RSI_LENGTH},
-    ui::data::{IndicatorConfig, IndicatorKind},
 };
 
 pub const DEFAULT_PRESET_LABEL: &str = "Default";
@@ -20,6 +20,7 @@ pub struct VolatilityTimeframeSetting {
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(default)]
 pub struct SettingsForm {
     pub pairs_input: String,
     pub volatility_enabled: bool,
@@ -28,6 +29,9 @@ pub struct SettingsForm {
     pub rsi_length: usize,
     pub rsi_source: KlineSource,
     pub rsi_timeframes: BTreeMap<Timeframe, bool>,
+    pub layout_column_spacing: u16,
+    pub layout_table_count: u16,
+    pub layout_table_spacing: u16,
 }
 
 impl Default for SettingsForm {
@@ -42,6 +46,9 @@ impl Default for SettingsForm {
             rsi_length: DEFAULT_RSI_LENGTH,
             rsi_source: KlineSource::Close,
             rsi_timeframes,
+            layout_column_spacing: 0,
+            layout_table_count: 1,
+            layout_table_spacing: 2,
         }
     }
 }

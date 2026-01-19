@@ -1,0 +1,1 @@
+APP_ENV=prod RUST_LOG=warn cargo run --release "$@"

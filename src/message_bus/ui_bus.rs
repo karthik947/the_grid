@@ -1,4 +1,4 @@
-use egui::Color32;
+use ratatui::style::Color;
 use tokio::sync::mpsc;
 
 /// Primary facade for cross-module communication.
@@ -102,15 +102,15 @@ pub enum IndicatorThresholds {
 
 #[derive(Clone, Copy, Debug)]
 pub struct IndicatorColors {
-    pub text: Color32,
-    pub background: Option<Color32>,
+    pub text: Color,
+    pub background: Option<Color>,
 }
 
 impl IndicatorValue {
-    const POSITIVE_TEXT: Color32 = Color32::from_rgb(64, 199, 122);
-    const NEGATIVE_TEXT: Color32 = Color32::from_rgb(230, 82, 82);
-    const POSITIVE_BG: Color32 = Color32::from_rgb(33, 178, 125);
-    const NEGATIVE_BG: Color32 = Color32::from_rgb(186, 64, 117);
+    const POSITIVE_TEXT: Color = Color::Rgb(64, 199, 122);
+    const NEGATIVE_TEXT: Color = Color::Rgb(230, 82, 82);
+    const POSITIVE_BG: Color = Color::Rgb(33, 178, 125);
+    const NEGATIVE_BG: Color = Color::Rgb(186, 64, 117);
 
     pub fn display(&self) -> String {
         match self {
@@ -134,7 +134,7 @@ impl IndicatorValue {
                 }
 
                 let text = if background.is_some() {
-                    Color32::WHITE
+                    Color::White
                 } else if *value >= 0.0 {
                     Self::POSITIVE_TEXT
                 } else {
@@ -158,7 +158,7 @@ impl IndicatorValue {
                 }
 
                 let text = if background.is_some() {
-                    Color32::WHITE
+                    Color::White
                 } else if *value >= 50.0 {
                     Self::POSITIVE_TEXT
                 } else {
