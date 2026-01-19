@@ -6,7 +6,7 @@ Built as a terminal UI with `ratatui`—no web or mobile frontend.
 
 ## Screenshot 🖥️
 
-![TUI Dashboard](diagrams/images/ui.png)
+![TUI Dashboard](docs/images/ui.png)
 
 ## Videos 🎥
 
