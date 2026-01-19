@@ -2,6 +2,7 @@
 
 mod adapters;
 mod engine;
+mod env;
 mod error;
 mod history;
 mod indicators;
@@ -15,6 +16,7 @@ mod ws;
 
 pub use error::Result;
 
+use crate::env as app_env;
 use adapters::binance::BinanceRest;
 use engine::Engine;
 use error::GlobalError;
@@ -28,7 +30,12 @@ use tui::run_tui;
 use ws::WsClient;
 
 fn main() -> Result<()> {
-    initialize_logger()?;
+    let app_env = app_env::init_defaults();
+    initialize_logger(&app_env)?;
+    info!(
+        "env: APP_ENV={}, RUST_LOG={}",
+        app_env.app_env, app_env.rust_log
+    );
     info!("grid: started");
 
     let runtime = Builder::new_multi_thread()

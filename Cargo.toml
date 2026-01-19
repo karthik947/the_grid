@@ -1,6 +1,6 @@
 [package]
 name = "the_grid"
-version = "0.2.2"
+version = "0.3.1"
 edition = "2024"
 repository = "https://github.com/karthik947/the_grid"
 authors = ["karthik"]
@@ -23,9 +23,6 @@ incremental = false    # This avoids accumulating cache data for release builds.
 [profile.dist]
 inherits = "release"
 lto = "thin"
-
-[workspace.metadata.dist]
-allow-dirty = ["ci"]
 
 [dependencies]
 log = "0.4.28"

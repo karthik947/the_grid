@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1]
+
+### Added
+
+- Environment defaults module for `APP_ENV` and `RUST_LOG`, with startup logging of resolved values.
+
+### Changed
+
+- Logger initialization now uses resolved defaults without mutating process env vars.
+- Removed unused cargo-dist metadata from `Cargo.toml`.
+
 ## [0.2.2]
 
 ### Fixed

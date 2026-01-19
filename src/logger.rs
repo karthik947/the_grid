@@ -1,18 +1,19 @@
 use flexi_logger::{Cleanup, Criterion, FileSpec, Logger, LoggerHandle, Naming, detailed_format};
 use std::{env, path::PathBuf, sync::OnceLock};
 
+use crate::env::Environment;
 use crate::Result;
 
 static LOGGER: OnceLock<LoggerHandle> = OnceLock::new();
 
-pub fn initialize_logger() -> Result<()> {
+pub fn initialize_logger(app_env: &Environment) -> Result<()> {
     if LOGGER.get().is_some() {
         return Ok(());
     }
 
     let is_dev = matches!(
-        env::var("APP_ENV").as_deref(),
-        Ok("dev") | Ok("development")
+        app_env.app_env.as_str(),
+        "dev" | "development"
     );
 
     let file_spec = if is_dev {
@@ -21,7 +22,7 @@ pub fn initialize_logger() -> Result<()> {
         FileSpec::default().directory(default_log_dir())
     };
 
-    let mut logger = Logger::try_with_env_or_str("off")
+    let mut logger = Logger::try_with_str(app_env.rust_log.as_str())
         .map_err(|err| err.to_string())?
         .log_to_file(file_spec);
 

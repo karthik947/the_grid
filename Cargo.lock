@@ -2147,7 +2147,7 @@ dependencies = [
 
 [[package]]
 name = "the_grid"
-version = "0.2.2"
+version = "0.3.1"
 dependencies = [
  "confy",
  "crossterm 0.27.0",
